@@ -64,11 +64,34 @@ Før/etter-par der deltakerne skriver om en dårlig test til en god. Oppgavene s
 
 ### TODO
 
-- [ ] Lag konkrete cases i domenet (velg domene som passer til kurset).
-- [ ] Lag oppgavene på egnet sted.
-- [ ] Lag løsningsforslag på egnet sted. Kan ligge nært oppgavene, men ikke i samme fil.
-- [ ] Sjekk oppsettet på forhånd (bygg, IDE, kjøring av tester).
-- [ ] Ha bonusoppgaver klare til de som blir raskt ferdige.
+- [x] Lag konkrete cases i domenet (velg domene som passer til kurset). → Nettbutikk.
+- [x] Lag oppgavene på egnet sted. → `exerciseN`-pakker, beskrevet i `OPPGAVER.md`.
+- [x] Lag løsningsforslag på egnet sted. → `exerciseN/solution`-pakker under `src/test`.
+- [x] Sjekk oppsettet på forhånd (bygg, IDE, kjøring av tester).
+- [x] Ha bonusoppgaver klare til de som blir raskt ferdige. → `exercise5_bonus`-pakken, pluss en liten bonus nederst i README for oppgave 1–3.
+
+### Notater til kursholder
+
+- **Oppgave 2:** «Før»-testene sjekker bare returverdien. Fjern `repository.save(cancelled)` i `OrderService`: mock-testene er fortsatt grønne, mens fake-testen brekker.
+- **Oppgave 3:** «Før»-testene sjekker aldri at ordren faktisk får status `SHIPPED`, og `verifyNoMoreInteractions` låser testen til implementasjonen.
+- **Oppgave 4:** Bytt ut `findAll().filter { ... }` med `findByCustomerId(customerId)` i `LoyaltyService`. Mock-testen feiler (`expected: 100 but was: 0`) fordi Mockito returnerer tom liste for metoder som ikke er stubbet. Fake-testen står. Dette er sjekket.
+- **Bonus 1 (`exercise5_bonus`):** «Før»-testen bruker `LocalDate.now()` i testen og systemklokken i produksjonskoden. Den kan feile rundt midnatt.
+
+### Svar på bonusspørsmålene
+
+- **Oppgave 1 – grensetilfeller for gratis frakt:** Løsningsforslaget dekker allerede 499 (frakt), 500 (gratis) og medlem (gratis). Andre gode tilfeller:
+    - Flere linjer som til sammen når grensen, for eksempel `line(price = 250)` + `line(price = 250)`.
+    - Antall som løfter ordren over grensen, for eksempel `line(price = 100, quantity = 5)`.
+    - Medlem med tom ordre / lav sum gir fortsatt 0 i frakt.
+    - Poenget: hver test blir én–to linjer med Arrange, fordi `OrderMother` fyller inn resten.
+- **Oppgave 2 – endringer «før»-testene ikke fanger** (sjekket ved å kjøre testene):
+    - Fjerne `repository.save(cancelled)`. Ordren blir aldri lagret som kansellert.
+    - Lagre den opprinnelige ordren, `repository.save(order)`, i stedet for den kansellerte.
+    - Begge fanges av løsningsforslagets `stores the order as cancelled`, fordi den sjekker tilstanden i faken.
+- **Oppgave 3 – endringer «før»-testene ikke fanger** (sjekket ved å kjøre testene):
+    - Returnere `order` i stedet for `shipped`. Ordren får aldri status `SHIPPED`, men e-posten sendes som før.
+    - Fanges av løsningsforslagets `marks the order as shipped`.
+    - Motsatt vei: `verifyNoMoreInteractions` gjør at «før»-testen brekker ved ufarlige endringer, for eksempel hvis `EmailSender` får en metode som `isAvailable()` og tjenesten begynner å kalle den før sending. Kunden mottar akkurat det samme, men testen er rød.
 
 ## 5. Testbar kode – valgfritt (10 min)
 
