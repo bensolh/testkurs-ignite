@@ -3,7 +3,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+OPPGAVER.md
+PLAN.dm
+
+## STS ###
 .apt_generated
 .classpath
 .factorypath
