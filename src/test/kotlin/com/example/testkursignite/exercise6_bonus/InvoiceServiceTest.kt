@@ -1,4 +1,4 @@
-package com.example.testkursignite.exercise5_bonus
+package com.example.testkursignite.exercise6_bonus
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

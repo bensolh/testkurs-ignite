@@ -1,4 +1,4 @@
-package com.example.testkursignite.exercise5_bonus
+package com.example.testkursignite.exercise6_bonus
 
 import java.time.Clock
 import java.time.LocalDate

@@ -1,7 +1,7 @@
-package com.example.testkursignite.exercise5_bonus.solution
+package com.example.testkursignite.exercise6_bonus.solution
 
-import com.example.testkursignite.exercise5_bonus.Invoice
-import com.example.testkursignite.exercise5_bonus.InvoiceService
+import com.example.testkursignite.exercise6_bonus.Invoice
+import com.example.testkursignite.exercise6_bonus.InvoiceService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

@@ -18,7 +18,8 @@ Kjør testene med `./mvnw test` eller fra IDE-en.
 | [Oppgave 2](src/test/kotlin/com/example/testkursignite/exercise2/README.md) | Fake i stedet for stubbing |
 | [Oppgave 3](src/test/kotlin/com/example/testkursignite/exercise3/README.md) | Sjekk tilstand, ikke interaksjon |
 | [Oppgave 4](src/test/kotlin/com/example/testkursignite/exercise4/README.md) | Demo: refaktorering |
-| [Bonus 1](src/test/kotlin/com/example/testkursignite/exercise5_bonus/README.md) | Deterministiske tester (Clock) |
+| [Oppgave 5](src/test/kotlin/com/example/testkursignite/exercise5/README.md) | Rik domenemodell |
+| [Bonus 1](src/test/kotlin/com/example/testkursignite/exercise6_bonus/README.md) | Deterministiske tester (Clock) |
 
-Oppgave 1–3 har også en liten bonusoppgave nederst i sin README.
+Oppgave 1–3 og 5 har også en liten bonusoppgave nederst i sin README.
 

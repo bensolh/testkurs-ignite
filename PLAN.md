@@ -61,6 +61,7 @@ Før/etter-par der deltakerne skriver om en dårlig test til en god. Oppgavene s
 | 2 | Mockito-stubbing av repository | Fake-repository (in-memory) |
 | 3 | `verify(times(1), someMethod)` | Assert på bieffekt i fake |
 | 4 | Demo: refaktorer implementasjonen | Mock-testen brekker, fake-testen står |
+| 5 | Domeneregel testet gjennom service med mock, tilstand satt for hånd | Test regelen på domeneobjektet, bygg tilstand med `ship()`/`deliver()`/`cancel()` |
 
 ### TODO
 
@@ -68,14 +69,15 @@ Før/etter-par der deltakerne skriver om en dårlig test til en god. Oppgavene s
 - [x] Lag oppgavene på egnet sted. → `exerciseN`-pakker, beskrevet i `OPPGAVER.md`.
 - [x] Lag løsningsforslag på egnet sted. → `exerciseN/solution`-pakker under `src/test`.
 - [x] Sjekk oppsettet på forhånd (bygg, IDE, kjøring av tester).
-- [x] Ha bonusoppgaver klare til de som blir raskt ferdige. → `exercise5_bonus`-pakken, pluss en liten bonus nederst i README for oppgave 1–3.
+- [x] Ha bonusoppgaver klare til de som blir raskt ferdige. → `exercise6_bonus`-pakken, pluss en liten bonus nederst i README for oppgave 1–3 og 5.
 
 ### Notater til kursholder
 
 - **Oppgave 2:** «Før»-testene sjekker bare returverdien. Fjern `repository.save(cancelled)` i `OrderService`: mock-testene er fortsatt grønne, mens fake-testen brekker.
 - **Oppgave 3:** «Før»-testene sjekker aldri at ordren faktisk får status `SHIPPED`, og `verifyNoMoreInteractions` låser testen til implementasjonen.
 - **Oppgave 4:** Bytt ut `findAll().filter { ... }` med `findByCustomerId(customerId)` i `LoyaltyService`. Mock-testen feiler (`expected: 100 but was: 0`) fordi Mockito returnerer tom liste for metoder som ikke er stubbet. Fake-testen står. Dette er sjekket.
-- **Bonus 1 (`exercise5_bonus`):** «Før»-testen bruker `LocalDate.now()` i testen og systemklokken i produksjonskoden. Den kan feile rundt midnatt.
+- **Oppgave 5:** Returregelen bor i `Order.canBeReturned()`, men «før»-testene går via `ReturnService` med mock. Deres `OrderMother` tar inn status og leveringsdato som parametere, så testene kan lage hvilken tilstand som helst. Testen `cancelled order cannot be returned` bruker en kansellert ordre *med* leveringsdato, altså en tilstand som ikke kan oppstå via domenemetodene. Løsningen tester `Order` direkte (ingen mocks), og løsningens `OrderMother` bygger tilstand med domenemetodene (`deliveredOrder(on)` = `placedOrder().ship().deliver(on)`, `cancelledOrder()` = `placedOrder().cancel()`). Da er testdataene alltid gyldige, og mor-objektet arver domenets regler gratis. Fin anledning til å snakke om at logikk på domeneobjektet er lettere å teste enn logikk i en service.
+- **Bonus 1 (`exercise6_bonus`):** «Før»-testen bruker `LocalDate.now()` i testen og systemklokken i produksjonskoden. Den kan feile rundt midnatt.
 
 ### Svar på bonusspørsmålene
 
@@ -92,6 +94,7 @@ Før/etter-par der deltakerne skriver om en dårlig test til en god. Oppgavene s
     - Returnere `order` i stedet for `shipped`. Ordren får aldri status `SHIPPED`, men e-posten sendes som før.
     - Fanges av løsningsforslagets `marks the order as shipped`.
     - Motsatt vei: `verifyNoMoreInteractions` gjør at «før»-testen brekker ved ufarlige endringer, for eksempel hvis `EmailSender` får en metode som `isAvailable()` og tjenesten begynner å kalle den før sending. Kunden mottar akkurat det samme, men testen er rød.
+- **Oppgave 5 – trenger `ReturnService` egne tester?** Den gjør nå bare oppslag og delegerer til `Order`. Det holder med én–to tester: at den svarer for riktig ordre (med fake-repository, som i oppgave 2), og at ukjent ordre gir `IllegalArgumentException`. Alle varianter av returregelen hører hjemme i `OrderTest`.
 
 ## 5. Testbar kode – valgfritt (10 min)
 
